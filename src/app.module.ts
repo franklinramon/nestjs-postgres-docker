@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TestController } from '../test/test.controller';
+import { AppController } from './app.controller';
+import { TestController } from '../test/test.controller'; // If you're still using the test controller
 import { UserController } from './user/user.controller';
-
-
-
+import { UserService } from './user/user.service';
+import { User } from './user/user.entity';
 
 @Module({
   imports: [
@@ -23,20 +22,9 @@ import { UserController } from './user/user.controller';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([User]),
   ],
-  controllers: [],
-  providers: [],
-})
-
-@Module({
-  imports: [],
-  controllers: [TestController],
-  providers: [],
-})
-
-@Module({
-  imports: [],
-  controllers: [AppController, TestController, UserController], // Add AppController here
-  providers: [],
+  controllers: [AppController, TestController, UserController], // Ensure AppController is here
+  providers: [UserService],
 })
 export class AppModule {}
