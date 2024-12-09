@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000" # Maps the container's port 3000 to your host's port 3000
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: password
+      DB_NAME: nestjsdb
+    depends_on:
+      - db # Ensures the app waits for the database to start
+
+  db:
+    image: postgres:15-alpine # Uses a lightweight PostgreSQL image
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nestjsdb
+    ports:
+      - "5432:5432" # Maps the container's PostgreSQL port to your host's port
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persists database data across container restarts
+
+volumes:
+  postgres_data:
