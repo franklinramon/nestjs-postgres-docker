@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller'; // AppController import
-import { TestController } from '../test/test.controller'; // TestController import (if still used)
-import { UserController } from './user/user.controller'; // UserController import
-import { UserService } from './user/user.service'; // UserService import
-import { User } from './user/user.entity'; // User entity import
+import { AppController } from './app.controller'; // Ensure AppController is properly imported
+import { TestController } from '../test/test.controller'; // If you're still using the TestController
+import { UserController } from './user/user.controller'; // User Controller
+import { UserService } from './user/user.service'; // User Service
+import { User } from './user/user.entity'; // User Entity
 
 @Module({
   imports: [
@@ -14,23 +14,17 @@ import { User } from './user/user.entity'; // User entity import
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST, // PostgreSQL host from .env
-      port: parseInt(process.env.DB_PORT, 10), // PostgreSQL port from .env
-      username: process.env.DB_USER, // PostgreSQL username from .env
-      password: process.env.DB_PASS, // PostgreSQL password from .env
-      database: process.env.DB_NAME, // PostgreSQL database from .env
-      autoLoadEntities: true, // Automatically load entities
-      synchronize: true, // WARNING: Use only in development
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      autoLoadEntities: true, // Automatically load entities without specifying them in the forFeature array
+      synchronize: true, // WARNING: Disable this in production to prevent data loss
     }),
-    TypeOrmModule.forFeature([User]), // Register User entity
+    TypeOrmModule.forFeature([User]), // Register the User entity with TypeORM
   ],
-  controllers: [
-    AppController, // Include AppController
-    TestController, // Include TestController if needed
-    UserController, // Include UserController
-  ],
-  providers: [
-    UserService, // Include UserService
-  ],
+  controllers: [AppController, TestController, UserController], // Add your controllers here
+  providers: [UserService], // Add your services here
 })
 export class AppModule {}
