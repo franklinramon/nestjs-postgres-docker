@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { TestController } from '../test/test.controller'; // If you're still using the test controller
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
-import { User } from './user/user.entity';
+import { AppController } from './app.controller'; // AppController import
+import { TestController } from '../test/test.controller'; // TestController import (if still used)
+import { UserController } from './user/user.controller'; // UserController import
+import { UserService } from './user/user.service'; // UserService import
+import { User } from './user/user.entity'; // User entity import
 
 @Module({
   imports: [
@@ -14,17 +14,23 @@ import { User } from './user/user.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT, 10),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
+      host: process.env.DB_HOST, // PostgreSQL host from .env
+      port: parseInt(process.env.DB_PORT, 10), // PostgreSQL port from .env
+      username: process.env.DB_USER, // PostgreSQL username from .env
+      password: process.env.DB_PASS, // PostgreSQL password from .env
+      database: process.env.DB_NAME, // PostgreSQL database from .env
+      autoLoadEntities: true, // Automatically load entities
+      synchronize: true, // WARNING: Use only in development
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User]), // Register User entity
   ],
-  controllers: [AppController, TestController, UserController], // Ensure AppController is here
-  providers: [UserService],
+  controllers: [
+    AppController, // Include AppController
+    TestController, // Include TestController if needed
+    UserController, // Include UserController
+  ],
+  providers: [
+    UserService, // Include UserService
+  ],
 })
 export class AppModule {}
