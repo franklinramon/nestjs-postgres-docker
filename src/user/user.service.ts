@@ -1,25 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity'; // Import the User entity
-import { CreateUserDto } from './create-user.dto'; // Import the DTO
+import { User } from './user.entity';
 
-@Injectable() // Marks the service to be injectable into other parts of the app
+@Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>, // Inject the User repository to interact with the database
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find(); // This fetches all records from the User table
+    return this.userRepository.find();
   }
-  // Create a new user
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
-    user.name = createUserDto.name;
-    user.email = createUserDto.email;
 
-    return this.userRepository.save(user); // Save the user to the database
+  async createUser(createUserDto: Partial<User>): Promise<User> {
+    const newUser = this.userRepository.create(createUserDto); // Creates a new user instance
+    return this.userRepository.save(newUser); // Saves the user to the database
   }
 }
